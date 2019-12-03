@@ -1,0 +1,74 @@
+﻿<Window x:Class="Sharpdelbrot.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Sharpdelbrot"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Title="Sharpdelbrot" Height="450" Width="800">
+    <DockPanel>
+        <StatusBar DockPanel.Dock="Bottom" Height="22">
+            <TextBlock Margin="5,0" Text="{Binding LastRenderTime.TotalMilliseconds, StringFormat=Last time: {0:N0} ms}">
+            </TextBlock>
+            <ProgressBar Width="100" Height="10" Minimum="0" Maximum="100" Value="{Binding Progress, Mode=OneWay}"></ProgressBar>
+        </StatusBar>
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Right" Width="100" Orientation="Vertical">
+                <Button Name="ButtonRefresh" Height="25" Margin="7" Click="ButtonRefresh_Click"
+                        IsEnabled="{Binding IsReady, Mode=OneWay}">Refresh</Button>
+                <Button Name="ButtonZoomOut" Height="25" Margin="7"
+                        IsEnabled="{Binding IsReady, Mode=OneWay}" Click="ButtonZoomOut_Click">Zoom Out</Button>
+                <TextBlock Margin="7,7,7,0">Max Steps:</TextBlock>
+                <TextBox Name="MaximumSteps" Margin="7,3,7,7"
+                         IsEnabled="{Binding IsReady}"
+                         Text="{Binding MaxSteps}"></TextBox>
+                <TextBlock Margin="7,7,7,0">Resolution Mul:</TextBlock>
+                <TextBox Name="ResolutionMultiplier" Margin="7,3,7,7"
+                         IsEnabled="{Binding IsReady, Mode=OneWay}"
+                         Text="{Binding ResolutionMultiplier}"></TextBox>
+                <CheckBox Name="Parallelism" Margin="7,7,7,0" Content="Multi-thread" IsChecked="{Binding ParallelModeOn, Mode=TwoWay}"
+                          IsEnabled="{Binding IsReady, Mode=OneWay}"/>
+                <TextBox Name="TextBoxThreadsCount" Margin="7,3,7,7"
+                         IsEnabled="{Binding CanChangeThreadsCount, Mode=OneWay}"
+                         Text="{Binding ThreadsCount}"/>
+                <Button Name="ButtonReset" Height="25" Margin=" 7"
+                        IsEnabled="{Binding IsReady, Mode=OneWay}" Click="ButtonReset_Click">Reset</Button>
+                <Expander Header="Colors" Margin="7,0,7,0">
+                    <StackPanel>
+                        <Button Name="ButtonRandomize" Height="25" Margin="0,7,0,7"
+                                IsEnabled="{Binding IsReady, Mode=OneWay}" Click="ButtonRandomize_Click">Randomize</Button>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Column="0" Grid.Row="0">Kr:</TextBlock>
+                            <TextBox Grid.Column="1" Grid.Row="0" IsEnabled="{Binding IsReady}" Text="{Binding Kr}"></TextBox>
+                            <TextBlock Grid.Column="0" Grid.Row="1">Kg:</TextBlock>
+                            <TextBox Grid.Column="1" Grid.Row="1" IsEnabled="{Binding IsReady}" Text="{Binding Kg}"></TextBox>
+                            <TextBlock Grid.Column="0" Grid.Row="2">Kb:</TextBlock>
+                            <TextBox Grid.Column="1" Grid.Row="2" IsEnabled="{Binding IsReady}" Text="{Binding Kb}"></TextBox>
+                        </Grid>
+                    </StackPanel>
+                </Expander>
+            </StackPanel>
+            <Canvas Name="CanvasFractalView">
+                <Image Name="ImageFractalView" Stretch="UniformToFill"
+                       RenderOptions.BitmapScalingMode="HighQuality"
+                       Width="{Binding ElementName=CanvasFractalView, Path=ActualWidth}"
+                       Height="{Binding ElementName=CanvasFractalView, Path=ActualHeight}" 
+                       Source="{Binding Image, Mode=OneWay}"
+                       IsEnabled="{Binding IsReady, Mode=OneWay}"
+                       MouseLeftButtonDown="ImageFractalView_OnMouseLeftButtonDown"
+                       MouseRightButtonDown="ImageFractalView_OnMouseRightButtonDown"
+                       MouseMove="ImageFractalView_OnMouseMove"/>
+            </Canvas>
+        </DockPanel>
+    </DockPanel>
+</Window>
